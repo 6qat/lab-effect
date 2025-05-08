@@ -1,4 +1,4 @@
-import { Either, Schema } from "effect";
+import { Either, Schema } from 'effect';
 
 const MySimpleSchema = Schema.Struct({
   id: Schema.String,
@@ -7,24 +7,24 @@ const MySimpleSchema = Schema.Struct({
 });
 
 const decoded = Schema.decode(MySimpleSchema)({
-  id: "1",
-  title: "Hello",
+  id: '1',
+  title: 'Hello',
   isActive: true,
 });
 
 console.log(decoded);
 
 const decodedUnknown = Schema.decodeUnknown(MySimpleSchema)({
-  id: "1",
-  title: "Hello",
+  id: '1',
+  title: 'Hello',
   isActive: true,
 });
 
 console.log(decodedUnknown);
 
 const decodedUnknownEither = Schema.decodeUnknownEither(MySimpleSchema)({
-  id: "1",
-  title: "Hello",
+  id: '1',
+  title: 'Hello',
   //   isActive: true,
 });
 
@@ -35,11 +35,11 @@ if (Either.isRight(decodedUnknownEither)) {
 }
 
 const NumberFromString = Schema.NumberFromString;
-const _number = Schema.decode(NumberFromString)("123"); // 123 (number)
+const _number = Schema.decode(NumberFromString)('123'); // 123 (number)
 
 // ================================================================
 
-console.log("=================================================");
+console.log('=================================================');
 const MySimpleSchema2 = Schema.Struct({
   id: Schema.String,
   //   title: Schema.Union(Schema.String, Schema.Null),
@@ -52,15 +52,15 @@ const MySimpleSchema2 = Schema.Struct({
     // Schema.filter((s) =>
     //   s.length >= 3 ? true : "Value must have a min lenght of 3 "
     // )
-    Schema.minLength(3)
+    Schema.minLength(3),
   ),
   isActive: Schema.Boolean,
 });
 
 const decodedUnknownEither2 = Schema.decodeUnknownEither(MySimpleSchema2)({
-  id: "1",
+  id: '1',
   //   title: null,
-  title: "asd",
+  title: 'asd',
   isActive: true,
 });
 
@@ -89,8 +89,8 @@ interface MySimpleSchema3Type3
   extends Schema.Schema.Type<typeof MySimpleSchema3> {}
 
 const decodedUnknownEither3 = Schema.decodeUnknownEither(MySimpleSchema3)({
-  id: "1",
-  title: "asd ",
+  id: '1',
+  title: 'asd ',
   isActive: true,
 });
 
