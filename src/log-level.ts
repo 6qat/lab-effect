@@ -3,7 +3,7 @@
 // =======================================================================
 
 import { NodeRuntime } from '@effect/platform-node';
-import { Effect, Fiber, Layer, LogLevel, Logger } from 'effect';
+import { Effect, Fiber, Layer, LogLevel, Logger, ManagedRuntime } from 'effect';
 import { pipe } from 'effect';
 import { Context } from 'effect';
 
@@ -26,7 +26,7 @@ const bootstrapMyServiceEffect = Effect.gen(function* () {
   return MyService.of({
     doSomething: () => Effect.logDebug('from MyService!'),
   });
-}).pipe(Logger.withMinimumLogLevel(LogLevel.Debug));
+}); //.pipe(Logger.withMinimumLogLevel(LogLevel.Debug));
 
 const myServiceLayer = Layer.effect(MyService, bootstrapMyServiceEffect);
 
@@ -38,11 +38,17 @@ const program = Effect.gen(function* () {
 
 const loggerLayer = Logger.minimumLogLevel(LogLevel.Debug);
 
-NodeRuntime.runMain(
-  Effect.provide(program, Layer.merge(loggerLayer, myServiceLayer)),
+// NodeRuntime.runMain(
+//   // Effect.provide(program, Layer.merge(loggerLayer, myServiceLayer)),
+//   Effect.provide(Effect.provide(program, myServiceLayer), loggerLayer),
+// );
+
+program.pipe(
+  Effect.provide(myServiceLayer.pipe(Layer.provideMerge(loggerLayer))),
+  NodeRuntime.runMain,
 );
 
-// =======================================================================
+// =====================================================================
 
 const myServiceInstance = MyService.of({
   doSomething: () => Effect.logDebug('from MyService!'),
@@ -55,3 +61,11 @@ const programWithService = Effect.provideService(
 );
 
 // NodeRuntime.runMain(Effect.provide(programWithService, loggerLayer));
+
+// =====================================================================
+
+const runtime = ManagedRuntime.make(Logger.minimumLogLevel(LogLevel.Debug));
+
+// runtime.runPromise(Effect.provide(program, myServiceLayer));
+
+// =====================================================================
