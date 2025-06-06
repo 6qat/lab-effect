@@ -1,5 +1,5 @@
 import { NodeRuntime } from '@effect/platform-node';
-import { Effect, Clock, Console, Random } from 'effect';
+import { Clock, Effect, Random } from 'effect';
 
 //      ┌─── Effect<void, never, never>
 //      ▼
